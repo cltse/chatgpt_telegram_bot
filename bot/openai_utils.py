@@ -3,7 +3,9 @@ import config
 import tiktoken
 import openai
 openai.api_key = config.openai_api_key
-
+openai.api_type = config.api_type
+openai.api_base = config.api_base
+openai.api_version = config.api_version
 
 CHAT_MODES = config.chat_modes
 
