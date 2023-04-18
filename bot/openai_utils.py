@@ -22,6 +22,12 @@ class ChatGPT:
     def __init__(self, model="gpt-3.5-turbo"):
         assert model in {"text-davinci-003", "gpt-3.5-turbo", "gpt-4"}, f"Unknown model: {model}"
         self.model = model
+        if model == "gpt-3.5-turbo":
+            self.engine = "gpt-35-turbo-deploy"
+        elif model == "gpt-4":
+            self.engine = "gpt-4-32k-deploy"
+        else:
+            self.engine = None
 
     async def send_message(self, message, dialog_messages=[], chat_mode="assistant"):
         if chat_mode not in CHAT_MODES.keys():
@@ -34,6 +40,7 @@ class ChatGPT:
                 if self.model in {"gpt-3.5-turbo", "gpt-4"}:
                     messages = self._generate_prompt_messages(message, dialog_messages, chat_mode)
                     r = await openai.ChatCompletion.acreate(
+                        engine=self.engine,
                         model=self.model,
                         messages=messages,
                         **OPENAI_COMPLETION_OPTIONS
@@ -74,6 +81,7 @@ class ChatGPT:
                 if self.model in {"gpt-3.5-turbo", "gpt-4"}:
                     messages = self._generate_prompt_messages(message, dialog_messages, chat_mode)
                     r_gen = await openai.ChatCompletion.acreate(
+                        engine=self.engine,
                         model=self.model,
                         messages=messages,
                         stream=True,
